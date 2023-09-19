@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
 const canvas = document.querySelector('canvas.webgl');
@@ -50,6 +51,32 @@ new RGBELoader()
     (error) => console.error('Failed to load HDR environment.', error)
   );
 
+const gltfLoader = new GLTFLoader();
+let currentModel = null;
+
+async function loadModel(modelUrl) {
+  try {
+    const gltf = await gltfLoader.loadAsync(modelUrl);
+    const newModel = gltf.scene;
+    newModel.name = 'currentModel';
+
+    newModel.position.set(0, 0, 0);
+    newModel.scale.set(1, 1, 1);
+
+    newModel.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+
+    currentModel = newModel;
+    scene.add(currentModel);
+  } catch (error) {
+    console.error(`Failed to load model from ${modelUrl}`, error);
+  }
+}
+
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -62,3 +89,7 @@ function render() {
 }
 
 renderer.setAnimationLoop(render);
+
+loadModel(
+  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/AnimatedMorphCube/glTF/AnimatedMorphCube.gltf'
+);
