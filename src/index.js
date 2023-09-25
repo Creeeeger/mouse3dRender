@@ -77,6 +77,24 @@ async function loadModel(modelUrl) {
   }
 }
 
+const presets = {
+  buttonRed:
+    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/ToyCar/glTF/ToyCar.gltf',
+  buttonBlue:
+    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/BoomBox/glTF/BoomBox.gltf',
+  buttonGreen:
+    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/EnvironmentTest/glTF/EnvironmentTest.gltf',
+  buttonYellow:
+    'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/BarramundiFish/glTF/BarramundiFish.gltf'
+};
+
+Object.entries(presets).forEach(([buttonId, modelUrl]) => {
+  const button = document.getElementById(buttonId);
+  if (!button) return;
+
+  button.addEventListener('click', () => loadModel(modelUrl));
+});
+
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
