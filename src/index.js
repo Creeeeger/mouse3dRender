@@ -70,11 +70,43 @@ async function loadModel(modelUrl) {
       }
     });
 
+    if (currentModel) {
+      disposeModel(currentModel);
+      scene.remove(currentModel);
+    }
+
     currentModel = newModel;
     scene.add(currentModel);
   } catch (error) {
     console.error(`Failed to load model from ${modelUrl}`, error);
   }
+}
+
+function disposeModel(model) {
+  model.traverse((child) => {
+    if (!child.isMesh) return;
+
+    if (child.geometry) {
+      child.geometry.dispose();
+    }
+
+    const materials = Array.isArray(child.material)
+      ? child.material
+      : [child.material];
+
+    materials.forEach((material) => {
+      if (!material) return;
+
+      for (const key of Object.keys(material)) {
+        const value = material[key];
+        if (value && typeof value === 'object' && 'minFilter' in value) {
+          value.dispose?.();
+        }
+      }
+
+      material.dispose?.();
+    });
+  });
 }
 
 const presets = {
