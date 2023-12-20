@@ -20,6 +20,7 @@ body {
   align-items: center;
   justify-content: flex-start;
   padding: 2rem clamp(1.5rem, 2vw, 4rem);
+  background: radial-gradient(circle at top, #2a2d3a, #12131a 60%);
   color: #f8f9ff;
 }
 
@@ -31,6 +32,8 @@ body {
 
 .app-header h1 {
   margin: 0;
+  font-weight: 600;
+  font-size: clamp(2rem, 4vw, 3rem);
 }
 
 .app-header p,
@@ -50,10 +53,17 @@ body {
 canvas.webgl {
   width: 100%;
   aspect-ratio: 16 / 9;
+  border-radius: 1.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 35px 60px rgba(0, 0, 0, 0.45);
 }
 
 .control-panel {
   padding: 1.5rem;
+  border-radius: 1rem;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(12px);
 }
 
 .control-panel h2 {
@@ -78,4 +88,29 @@ canvas.webgl {
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.color-button:hover,
+.color-button:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.35);
+  outline: none;
+}
+
+.color-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+@media (min-width: 960px) {
+  .app-content {
+    grid-template-columns: 3fr 1fr;
+    align-items: stretch;
+  }
+
+  .control-panel {
+    align-self: stretch;
+  }
 }
